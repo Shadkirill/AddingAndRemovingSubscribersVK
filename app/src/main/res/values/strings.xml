@@ -1,7 +1,5 @@
 <resources>
-    <string name="app_name">AddingAndRemovingSubscribersVK</string>
-
-    <string name="action_sign_in_short">Sign in with VK</string>
+    <string name="app_name">Добавление и удаление подписчиков ВК</string>
 
     <string name="logout">Logout</string>
     <string name="continue_using_app">Continue using test application</string>

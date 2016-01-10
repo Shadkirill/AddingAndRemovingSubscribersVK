@@ -19,8 +19,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -36,10 +34,6 @@ public class SubscribersListFragment extends ListFragment {
         mAdapter = new ArrayAdapter<Subscriber>(getActivity(), android.R.layout.simple_list_item_1, mSubscribers);
         setListAdapter(mAdapter);
         update();
-    }
-
-    private void addSubscriber(Subscriber subscriber) {
-        mSubscribers.add(subscriber);
     }
 
     private void showMessage(String message) {
@@ -60,7 +54,7 @@ public class SubscribersListFragment extends ListFragment {
     private void update() {
         showMessage("Updating...");
         VKRequest request = VKApi.users().getFollowers(VKParameters.from(VKApiConst.FIELDS,
-                "id, first_name, last_name, photo_100, photo_max"));
+                "id, first_name, last_name"));
         request.executeWithListener(new VKRequest.VKRequestListener() {
             @Override
             public void onComplete(VKResponse response) {

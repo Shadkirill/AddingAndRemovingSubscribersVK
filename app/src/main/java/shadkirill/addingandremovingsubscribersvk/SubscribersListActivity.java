@@ -1,31 +1,17 @@
 package shadkirill.addingandremovingsubscribersvk;
 
 
-import android.graphics.drawable.Drawable;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
-import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
-
-import com.vk.sdk.api.VKApi;
-import com.vk.sdk.api.VKApiConst;
+import com.vk.sdk.VKAccessToken;
+import com.vk.sdk.VKCallback;
+import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKError;
-import com.vk.sdk.api.VKParameters;
-import com.vk.sdk.api.VKRequest;
-import com.vk.sdk.api.VKResponse;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
-
 
 /**
  * Created by shadk on 08.01.2016.
@@ -38,8 +24,60 @@ public class SubscribersListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_subscribers_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().add(R.id.container, new SubscribersListFragment()).commit();
+        if (VKSdk.isLoggedIn()) {
+            VKSdk.logout();
+        }
+        VKSdk.wakeUpSession(this, new VKCallback<VKSdk.LoginState>() {
+            @Override
+            public void onResult(VKSdk.LoginState res) {
+                    switch (res) {
+                        case LoggedOut:
+                            showFragment(new LoginFragment());
+                            break;
+                        case LoggedIn:
+                            showFragment(new SubscribersListFragment());
+                            break;
+                        case Pending:
+                            break;
+                        case Unknown:
+                            break;
+                    }
+            }
+
+            @Override
+            public void onError(VKError error) {
+
+            }
+        });
+    }
+
+    private void showFragment(Fragment fragment) {
+        getSupportFragmentManager().
+                beginTransaction().
+                replace(R.id.container, fragment).commitAllowingStateLoss();
+    }
+
+    private void showMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        VKCallback<VKAccessToken> callback = new VKCallback<VKAccessToken>() {
+            @Override
+            public void onResult(VKAccessToken res) {
+                showFragment(new SubscribersListFragment());
+            }
+
+            @Override
+            public void onError(VKError error) {
+                showMessage("Something wrong with authorization");
+                finish();
+            }
+        };
+
+        if (!VKSdk.onActivityResult(requestCode, resultCode, data, callback)) {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
