@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKCallback;
@@ -17,7 +18,7 @@ import com.vk.sdk.api.VKError;
  * Created by shadk on 08.01.2016.
  */
 public class SubscribersListActivity extends AppCompatActivity {
-
+    private SubscribersListFragment mSubscribersListFragment = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,18 +31,19 @@ public class SubscribersListActivity extends AppCompatActivity {
         VKSdk.wakeUpSession(this, new VKCallback<VKSdk.LoginState>() {
             @Override
             public void onResult(VKSdk.LoginState res) {
-                    switch (res) {
-                        case LoggedOut:
-                            showFragment(new LoginFragment());
-                            break;
-                        case LoggedIn:
-                            showFragment(new SubscribersListFragment());
-                            break;
-                        case Pending:
-                            break;
-                        case Unknown:
-                            break;
-                    }
+                switch (res) {
+                    case LoggedOut:
+                        showFragment(new LoginFragment());
+                        break;
+                    case LoggedIn:
+                        mSubscribersListFragment = new SubscribersListFragment();
+                        showFragment(mSubscribersListFragment);
+                        break;
+                    case Pending:
+                        break;
+                    case Unknown:
+                        break;
+                }
             }
 
             @Override
@@ -51,14 +53,27 @@ public class SubscribersListActivity extends AppCompatActivity {
         });
     }
 
-    private void showFragment(Fragment fragment) {
-        getSupportFragmentManager().
-                beginTransaction().
-                replace(R.id.container, fragment).commitAllowingStateLoss();
-    }
 
-    private void showMessage(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id == R.id.add) {
+            return true;
+        }
+
+        if (id == R.id.delete) {
+            return true;
+        }
+
+        if (id == R.id.refresh) {
+            mSubscribersListFragment.update();
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -85,6 +100,16 @@ public class SubscribersListActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_subscribers_list, menu);
         return true;
+    }
+
+    private void showFragment(Fragment fragment) {
+        getSupportFragmentManager().
+                beginTransaction().
+                replace(R.id.container, fragment).commitAllowingStateLoss();
+    }
+
+    private void showMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
 }

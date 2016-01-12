@@ -36,6 +36,10 @@ public class SubscribersListFragment extends ListFragment {
         update();
     }
 
+    public ArrayList<Subscriber> getSubscribers() {
+        return mSubscribers;
+    }
+
     private void showMessage(String message) {
         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
@@ -51,7 +55,7 @@ public class SubscribersListFragment extends ListFragment {
         }
     }*/
 
-    private void update() {
+    public void update() {
         showMessage("Updating...");
         VKRequest request = VKApi.users().getFollowers(VKParameters.from(VKApiConst.FIELDS,
                 "id, first_name, last_name"));
@@ -59,7 +63,7 @@ public class SubscribersListFragment extends ListFragment {
             @Override
             public void onComplete(VKResponse response) {
                 try {
-                    mSubscribers.clear();
+                    //mSubscribers.clear();
                     JSONObject responseJSON = response.json.getJSONObject("response");
                     //long count = responseJSON.getLong("count");
                     JSONArray subscribersArray = responseJSON.getJSONArray("items");
