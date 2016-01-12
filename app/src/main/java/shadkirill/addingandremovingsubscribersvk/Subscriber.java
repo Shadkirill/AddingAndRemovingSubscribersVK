@@ -11,6 +11,7 @@ public class Subscriber {
     private long mId;
     private String mFirstName = null;
     private String mLastName = null;
+    private boolean checked = false;
 
     Subscriber (long id, String firstName, String lastName) {
         mFirstName = firstName;
@@ -28,6 +29,14 @@ public class Subscriber {
 
     public String getLastName() {
         return mLastName;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 
     public long getId() {

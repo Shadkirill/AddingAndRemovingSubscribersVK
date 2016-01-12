@@ -26,18 +26,23 @@ import java.util.ArrayList;
  */
 public class SubscribersListFragment extends ListFragment {
     private ArrayList<Subscriber> mSubscribers = null;
-    ArrayAdapter<Subscriber> mAdapter;
+    MyArrayAdapter mAdapter;
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mSubscribers = new ArrayList<Subscriber>();
-        mAdapter = new ArrayAdapter<Subscriber>(getActivity(), android.R.layout.simple_list_item_1, mSubscribers);
+        mAdapter = new MyArrayAdapter(getActivity(), mSubscribers);
         setListAdapter(mAdapter);
         update();
     }
 
-    public ArrayList<Subscriber> getSubscribers() {
-        return mSubscribers;
+    public Subscriber[] getCheckedSubscribers() {
+        ArrayList<Subscriber> subscribers = new ArrayList<Subscriber>();
+        for (Subscriber subscriber : mSubscribers) {
+            if (subscriber.isChecked())
+                subscribers.add(subscriber);
+        }
+        return subscribers.toArray(new Subscriber[subscribers.size()]);
     }
 
     private void showMessage(String message) {
@@ -63,6 +68,7 @@ public class SubscribersListFragment extends ListFragment {
             @Override
             public void onComplete(VKResponse response) {
                 try {
+                    mSubscribers.clear();
                     //mSubscribers.clear();
                     JSONObject responseJSON = response.json.getJSONObject("response");
                     //long count = responseJSON.getLong("count");

@@ -25,9 +25,6 @@ public class SubscribersListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_subscribers_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        if (VKSdk.isLoggedIn()) {
-            VKSdk.logout();
-        }
         VKSdk.wakeUpSession(this, new VKCallback<VKSdk.LoginState>() {
             @Override
             public void onResult(VKSdk.LoginState res) {
@@ -53,29 +50,6 @@ public class SubscribersListActivity extends AppCompatActivity {
         });
     }
 
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-
-        if (id == R.id.add) {
-            return true;
-        }
-
-        if (id == R.id.delete) {
-            return true;
-        }
-
-        if (id == R.id.refresh) {
-            mSubscribersListFragment.update();
-            return true;
-        }
-
-        return false;
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         VKCallback<VKAccessToken> callback = new VKCallback<VKAccessToken>() {
@@ -94,6 +68,31 @@ public class SubscribersListActivity extends AppCompatActivity {
         if (!VKSdk.onActivityResult(requestCode, resultCode, data, callback)) {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (mSubscribersListFragment != null) {
+            switch (item.getItemId()) {
+                case R.id.add:
+                    Adder adder = new Adder(mSubscribersListFragment.getCheckedSubscribers());
+                    adder.execute(); //прикрутить прогрес диалог
+                    return true;
+                case R.id.delete:
+                    Toast.makeText(getApplicationContext(),"Item 3 Selected",Toast.LENGTH_LONG).show();
+                    return true;
+                case R.id.refresh:
+
+                        mSubscribersListFragment.update();
+
+                    return true;
+                case R.id.select_all:
+                    Toast.makeText(getApplicationContext(),"Item 3 Selected",Toast.LENGTH_LONG).show();
+                    return true;
+                default:
+                    return super.onOptionsItemSelected(item);
+            }
+        } else return super.onOptionsItemSelected(item);
     }
 
     @Override
