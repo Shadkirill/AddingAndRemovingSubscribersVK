@@ -1,5 +1,7 @@
 package shadkirill.addingandremovingsubscribersvk;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 
 import com.vk.sdk.VKSdk;
@@ -17,14 +19,20 @@ import java.util.ArrayList;
  */
 public class Adder extends AsyncTask <Void, Void, Void> {
     private Subscriber [] mSubscribers;
+    private ProgressDialog mProgressDialog = null;
+    private Context mContext;
 
-    Adder (Subscriber [] subscribers) {
+    Adder (Context context, Subscriber [] subscribers) {
+        mContext = context;
         mSubscribers = subscribers;
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+        mProgressDialog = new ProgressDialog(mContext);
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.show();
     }
 
     @Override
@@ -55,5 +63,7 @@ public class Adder extends AsyncTask <Void, Void, Void> {
     @Override
     protected void onPostExecute(Void result) {
         super.onPostExecute(result);
+        mProgressDialog.dismiss();
+        ((SubscribersListActivity)mContext).updateSubscribersListFragment();
     }
 }

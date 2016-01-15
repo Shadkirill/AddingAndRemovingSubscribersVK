@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.vk.sdk.api.VKApi;
@@ -26,7 +28,7 @@ import java.util.ArrayList;
  */
 public class SubscribersListFragment extends ListFragment {
     private ArrayList<Subscriber> mSubscribers = null;
-    MyArrayAdapter mAdapter;
+    private MyArrayAdapter mAdapter;
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -49,6 +51,39 @@ public class SubscribersListFragment extends ListFragment {
         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
 
+    private boolean isAllChecked() {
+        return (getCheckedSubscribers().length == mSubscribers.size());
+    }
+
+    private void checkAll(boolean check) {
+        int size = mAdapter.getCount();
+        for(int i = 0; i < size; i++) {
+            CheckBox checkBox = (CheckBox)getViewByPosition(i).findViewById(R.id.checkbox);
+            checkBox.setChecked(check);
+            mSubscribers.get(i).setChecked(check);
+        }
+    }
+
+    public void checkAll() {
+        if (isAllChecked()) {
+            checkAll(false);
+        } else {
+            checkAll(true);
+        }
+    }
+
+    public View getViewByPosition(int pos) {
+        ListView listView = getListView();
+        final int firstListItemPosition = listView.getFirstVisiblePosition();
+        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
+
+        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
+            return mAdapter.getView(pos, null, listView);
+        } else {
+            final int childIndex = pos - firstListItemPosition;
+            return listView.getChildAt(childIndex);
+        }
+    }
    /* private static Drawable loadImage(String url) {
         try {
             InputStream is = (InputStream) new URL(url).getContent();

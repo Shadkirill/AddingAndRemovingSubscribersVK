@@ -75,7 +75,7 @@ public class SubscribersListActivity extends AppCompatActivity {
         if (mSubscribersListFragment != null) {
             switch (item.getItemId()) {
                 case R.id.add:
-                    Adder adder = new Adder(mSubscribersListFragment.getCheckedSubscribers());
+                    Adder adder = new Adder(this, mSubscribersListFragment.getCheckedSubscribers());
                     adder.execute(); //прикрутить прогрес диалог
                     return true;
                 case R.id.delete:
@@ -87,7 +87,7 @@ public class SubscribersListActivity extends AppCompatActivity {
 
                     return true;
                 case R.id.select_all:
-                    Toast.makeText(getApplicationContext(),"Item 3 Selected",Toast.LENGTH_LONG).show();
+                    mSubscribersListFragment.checkAll();
                     return true;
                 default:
                     return super.onOptionsItemSelected(item);
@@ -110,5 +110,7 @@ public class SubscribersListActivity extends AppCompatActivity {
     private void showMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
-
+    public void updateSubscribersListFragment() {
+        mSubscribersListFragment.update();
+    }
 }

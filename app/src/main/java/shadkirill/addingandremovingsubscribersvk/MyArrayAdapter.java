@@ -57,7 +57,7 @@ public class MyArrayAdapter extends BaseAdapter {
                 setText(String.valueOf(subscriber.getId()));
 
         CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkbox);
-        checkBox.setOnCheckedChangeListener(myCheckChangList);
+        checkBox.setOnCheckedChangeListener(myCheckChangeListener);
         // пишем позицию
         checkBox.setTag(position);
         return view;
@@ -68,7 +68,7 @@ public class MyArrayAdapter extends BaseAdapter {
         return ((Subscriber) getItem(position));
     }
 
-    CompoundButton.OnCheckedChangeListener myCheckChangList = new CompoundButton.OnCheckedChangeListener() {
+    CompoundButton.OnCheckedChangeListener myCheckChangeListener = new CompoundButton.OnCheckedChangeListener() {
         public void onCheckedChanged(CompoundButton buttonView,
                                      boolean isChecked) {
             // меняем данные товара (в корзине или нет)
