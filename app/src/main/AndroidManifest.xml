@@ -10,7 +10,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".SubscribersListActivity"
-            android:label="Followers">
+            android:label="@string/activity_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

@@ -60,7 +60,7 @@ public class SubscribersListActivity extends AppCompatActivity {
 
             @Override
             public void onError(VKError error) {
-                showMessage("Something wrong with authorization");
+                showMessage(getString(R.string.authorization_failed));
                 finish();
             }
         };
@@ -77,14 +77,15 @@ public class SubscribersListActivity extends AppCompatActivity {
                 case R.id.add:
                     Adder adder = new Adder(this, mSubscribersListFragment.getCheckedSubscribers());
                     adder.execute(); //прикрутить прогрес диалог
+                    mSubscribersListFragment.checkAll(false);
                     return true;
                 case R.id.delete:
-                    Toast.makeText(getApplicationContext(),"Item 3 Selected",Toast.LENGTH_LONG).show();
+                    Deleter deleter = new Deleter(this, mSubscribersListFragment.getCheckedSubscribers());
+                    deleter.execute();
+                    mSubscribersListFragment.checkAll(false);
                     return true;
                 case R.id.refresh:
-
-                        mSubscribersListFragment.update();
-
+                    mSubscribersListFragment.update();
                     return true;
                 case R.id.select_all:
                     mSubscribersListFragment.checkAll();

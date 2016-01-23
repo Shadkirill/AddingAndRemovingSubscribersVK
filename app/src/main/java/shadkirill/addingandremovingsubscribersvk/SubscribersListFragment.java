@@ -55,7 +55,7 @@ public class SubscribersListFragment extends ListFragment {
         return (getCheckedSubscribers().length == mSubscribers.size());
     }
 
-    private void checkAll(boolean check) {
+    public void checkAll(boolean check) {
         int size = mAdapter.getCount();
         for(int i = 0; i < size; i++) {
             CheckBox checkBox = (CheckBox)getViewByPosition(i).findViewById(R.id.checkbox);
@@ -96,7 +96,7 @@ public class SubscribersListFragment extends ListFragment {
     }*/
 
     public void update() {
-        showMessage("Updating...");
+        showMessage(getString(R.string.updating));
         VKRequest request = VKApi.users().getFollowers(VKParameters.from(VKApiConst.FIELDS,
                 "id, first_name, last_name"));
         request.executeWithListener(new VKRequest.VKRequestListener() {
@@ -118,7 +118,7 @@ public class SubscribersListFragment extends ListFragment {
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    showMessage("Something wrong");
+                    showMessage(getString(R.string.error));
                     getActivity().finish();
                 }
                 mAdapter.notifyDataSetChanged();

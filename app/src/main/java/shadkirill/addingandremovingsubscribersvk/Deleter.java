@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKApi;
 import com.vk.sdk.api.VKApiConst;
 import com.vk.sdk.api.VKError;
@@ -12,17 +11,15 @@ import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
 
-import java.util.ArrayList;
-
 /**
- * Created by shadk on 12.01.2016.
+ * Created by shadk on 23.01.2016.
  */
-public class Adder extends AsyncTask <Void, Void, Void> {
+public class Deleter extends AsyncTask<Void, Void, Void> {
     private Subscriber [] mSubscribers;
     private ProgressDialog mProgressDialog = null;
     private Context mContext;
 
-    Adder (Context context, Subscriber [] subscribers) {
+    Deleter (Context context, Subscriber [] subscribers) {
         mContext = context;
         mSubscribers = subscribers;
     }
@@ -39,7 +36,7 @@ public class Adder extends AsyncTask <Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
         for (Subscriber subscriber : mSubscribers) {
-            VKRequest request =  VKApi.friends().add(VKParameters.from(
+            VKRequest request = new VKRequest("account.banUser", VKParameters.from(
                     VKApiConst.USER_ID, subscriber.getId()));
             request.executeWithListener(new VKRequest.VKRequestListener() {
                 @Override
@@ -68,3 +65,4 @@ public class Adder extends AsyncTask <Void, Void, Void> {
         ((SubscribersListActivity)mContext).updateSubscribersListFragment();
     }
 }
+
